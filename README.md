@@ -355,3 +355,397 @@ erDiagram
         string Duracion_Dias
     }
 ```
+
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+
+
+<!-- Start of picture text -->
+=aN<br>—— ><br>TECNOLOGICO<br>NACIONAL DE MEXICO<br><!-- End of picture text -->
+
+### **LICENCIATURA EN INFORMÁTICA** 
+
+# **TAREA 2.2: TRANSICION DE DIAGRAMA ENTIDADRELACION A NOTACION UML** 
+
+**Asignatura:** Sistemas de Bases de Datos 
+
+**Docente** : Ruben Miguel Riojas Rodríguez **Alumno:** Eduardo Salazar Martínez 
+
+Pagina 1 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **Contenido** 
+
+|1. Planteamiento del Problema y Contextualizaciones .................................................................. 3|
+|---|
+|2. Matriz de Correspondencia Directa (E-R a Notacion UML) ....................................................... 3|
+|3. Especificación Detallada de Clases y Visibilidad ....................................................................... 4|
+|4. Diagrama de Clases UML 2.5 Formal ........................................................................................ 6|
+|5. Codigo Fuente Mermaid para Herramienta CASE..................................................................... 7|
+|6. Justificacion Tecnica de las Decisiones de Diseño ................................................................... 9|
+|7. Referencias Bibliograficas (APA 7a ed.) .................................................................................. 10|
+
+
+
+Pagina 2 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **1. Planteamiento del Problema y Contextualizaciones** 
+
+La clínica médica **Salud Total** requiere la transición de su modelo conceptual Entidad-Relación Extendido (EER) hacia una arquitectura orientada a objetos expresada en el Lenguaje de Modelado Unificado (UML 2.5). Esta evolución permite al equipo de ingeniería de software acoplar el diseño de la base de datos con la capa de lógica de negocio en lenguajes como Java o C#, garantizando el encapsulamiento de datos, la reutilización de código mediante herencia y la definición de métodos operativos. 
+
+## **2. Matriz de Correspondencia Directa (E-R a Notacion UML)** 
+
+La siguiente tabla establece la equivalencia semántica y sintáctica entre los componentes del Modelo Entidad-Relación y el Diagrama de Clases UML: 
+
+|**Concepto E-R / EER**|**Equivalente en UML**|**Aplicacion Practica en el**<br>**Sistema Clinico**|
+|---|---|---|
+|Entidad Superclase|Clase Abstracta (<<abstract>>)|Clase Persona (no instanciable<br>directamente).|
+|Entidad Subclase|Clase Concreta Heredada|Clases Paciente y Medico.|
+|Entidades Simples|Clases del Dominio|Departamento, Cita, Consulta, Receta,<br>Medicamento.|
+|Atributo Clave (PK)|Atributo Identificador ({PK})|idPersona: int {PK}, numExpediente:<br>String {PK}.|
+|Atributo Compuesto|Propiedades Desglosadas|Nombre_Completo -> primerNombre,<br>apellidoPaterno, etc.|
+|Atributo Derivado|Operacion / Metodo (+)|Edad -> +calcularEdad(): int.|
+|Atributo Multivalorado|Atributo Coleccion (List<T>)|Telefono -> telefonos: List<String>.|
+|Especializacion (d, t)|Generalizacion / Herencia (<|--)|Paciente y Medico extienden de<br>Persona.|
+|Agregacion E-R|Agregacion Compartida (o--)|Departamento (1) o-- (0..*) Medico.|
+|Dependencia Existencial|Composicion Fuerte (*--)|Consulta (1) *-- (0..*) Receta.|
+|Relacion M:N con Datos|Clase de Asociacion|RecetaMedicamento (dosis, frecuencia,<br>duracion).|
+
+
+
+Pagina 3 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **3. Especificación Detallada de Clases y Visibilidad** 
+
+Cada clase se especifica formalmente con visibilidad privada (-) para atributos y pública (+) para métodos, aplicando el principio de encapsulamiento: 
+
+**Clase: Persona (<<abstract>>)** 
+
+#### **Atributos:** 
+
+- idPersona: int {PK} 
+
+- primerNombre: String 
+
+- apellidoPaterno: String 
+
+- apellidoMaterno: String 
+
+- calle: String 
+
+- numero: String 
+
+- colonia: String 
+
+- codigoPostal: String 
+
+- fechaNacimiento: Date 
+
+- telefonos: List<String> 
+
+#### **Metodos:** 
+
+- + calcularEdad(): int 
+
+- + getNombreCompleto(): String 
+
+#### **Clase: Paciente (Hereda de Persona)** 
+
+#### **Atributos:** 
+
+- numExpediente: String {PK} 
+
+- tipoSangre: String 
+
+#### **Metodos:** 
+
+- + consultarHistorial(): List<Cita> 
+
+**Clase: Medico (Hereda de Persona)** 
+
+#### **Atributos:** 
+
+- numCedula: String {PK} 
+
+- fechaContratacion: Date 
+
+- especialidades: List<String> 
+
+#### **Metodos:** 
+
+- + atenderCita(cita: Cita): Consulta 
+
+**Clase: Departamento** 
+
+#### **Atributos:** 
+
+- idDepto: int {PK} 
+
+- nombreDepto: String - ubicacion: String 
+
+Pagina 4 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+**Clase: Cita** 
+
+#### **Atributos:** 
+
+- folioCita: int {PK} 
+
+- fecha: Date 
+
+- hora: Time 
+
+- estado: String 
+
+#### **Metodos:** 
+
+- + cancelarCita(): void 
+
+#### **Clase: Consulta** 
+
+#### **Atributos:** 
+
+- idConsulta: int {PK} 
+
+- diagnostico: String 
+
+- costoBase: Decimal 
+
+#### **Metodos:** 
+
+- + emitirReceta(): Receta 
+
+**Clase: Receta** 
+
+#### **Atributos:** 
+
+- folioReceta: int {PK} 
+
+- fechaEmision: Date 
+
+**Clase: Medicamento** 
+
+#### **Atributos:** 
+
+- codigoMed: int {PK} 
+
+- nombreComercial: String 
+
+- formula: String 
+
+**Clase: RecetaMedicamento (Clase de Asociacion)** 
+
+#### **Atributos:** 
+
+- dosis: String 
+
+- frecuencia: String 
+
+- duracionDias: int 
+
+Pagina 5 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **4. Diagrama de Clases UML 2.5 Formal** 
+
+
+
+<!-- Start of picture text -->
+DIAGRAMA DE CLASES UML 2.5 - SISTEMA CLINICA SALUD TOTAL<br>||<br>Pe<br>:<br>nombreConercial: String + eaitictemstal): Comat 1 0..*) . techagmision: Date<br>. |<br><!-- End of picture text -->
+
+_Figura 1: Diagrama de Clases UML del Sistema de Gestión Integral 'Clínica Salud Total'._ 
+
+Pagina 6 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **5. Codigo Fuente Mermaid para Herramienta CASE** 
+
+Para reproducción en herramientas CASE (Mermaid Live Editor, Draw.io o VS Code), se provee el siguiente código fuente ejecutable: 
+
+```
+classDiagram
+    class Persona {
+        <<abstract>>
+        -int idPersona
+        -String primerNombre
+        -String apellidoPaterno
+        -String apellidoMaterno
+        -String calle
+        -String numero
+        -String colonia
+        -String codigoPostal
+        -Date fechaNacimiento
+        -List~String~ telefonos
+        +calcularEdad() int
+        +getNombreCompleto() String
+    }
+    class Paciente {
+        -String numExpediente
+        -String tipoSangre
+    }
+    class Medico {
+        -String numCedula
+        -Date fechaContratacion
+        -List~String~ especialidades
+    }
+    class Departamento {
+        -int idDepto
+        -String nombreDepto
+        -String ubicacion
+    }
+    class Cita {
+        -int folioCita
+        -Date fecha
+        -Time hora
+        -String estado
+    }
+    class Consulta {
+        -int idConsulta
+        -String diagnostico
+        -Decimal costoBase
+        +emitirReceta() Receta
+    }
+    class Receta {
+        -int folioReceta
+        -Date fechaEmision
+    }
+    class Medicamento {
+        -int codigoMed
+        -String nombreComercial
+        -String formula
+    }
+    class RecetaMedicamento {
+        -String dosis
+```
+
+Pagina 7 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+```
+        -String frecuencia
+        -int duracionDias
+    }
+    Persona <|-- Paciente : Generalizacion
+    Persona <|-- Medico : Generalizacion
+    Departamento "1" o-- "0..*" Medico : alberga
+    Paciente "1" -- "0..*" Cita : solicita
+    Medico "1" -- "0..*" Cita : atiende
+    Cita "1" -- "0..1" Consulta : origina
+    Consulta "1" *-- "0..*" Receta : prescribe
+    Receta "1" -- "1..*" RecetaMedicamento : incluye
+    Medicamento "1" -- "0..*" RecetaMedicamento : prescribe_en
+```
+
+Pagina 8 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **6. Justificacion Tecnica de las Decisiones de Diseño** 
+
+**Encapsulamiento y Métodos Dinámicos:** El atributo derivado Edad del modelo E-R se convirtió en la función pública +calcularEdad(): int. Esto evita la persistencia estática de datos redundantes y garantiza que la edad se calcule en tiempo de ejecución basándose en la fecha actual. 
+
+**Abstracción mediante Clases Abstractas:** La clase Persona se marcó como <<abstract>> debido a que la regla de negocio RN-01 exige cobertura total e idoneidad estricta: ninguna instancia en el sistema es una 'Persona' genérica, sino concretamente un Paciente o un Medico. 
+
+**Diferenciación entre Agregación y Composición:** Se aplicó Agregación Compartida (o--) entre Departamento y Medico porque un médico preserva su existencia operacional aun si un departamento se reorganiza. Por el contrario, se aplicó Composición Fuerte (*--) entre Consulta y Receta debido a la dependencia de existencia estricta de la orden médica. 
+
+**Atributos Multivalorados como Colecciones:** Teléfono y Especialidades se modelan como listas de cadenas (List<String>), aprovechando las capacidades del paradigma de objetos sin necesidad de tablas auxiliares débiles en la capa lógica de software. 
+
+Pagina 9 
+
+TAREA 2.2: TRANSICION DE DIAGRAMA E-R A NOTACION UML | CLINICA SALUD TOTAL 
+
+## **7. Referencias Bibliograficas (APA 7a ed.)** 
+
+Elmasri, R., & Navathe, S. B. (2017). Fundamentals of database systems (7th ed.). Pearson. 
+
+Object Management Group. (2017). Unified Modeling Language (UML) specification, version 2.5.1. OMG. 
+
+- Pressman, R. S., & Maxim, B. R. (2021). Software engineering: A practitioner's approach (9th ed.). McGrawHill Education. 
+
+- Silberschatz, A., Korth, H. F., & Sudarshan, S. (2020). Database system concepts (7th ed.). McGraw-Hill Education. 
+
+Pagina 10 
+
+```mermaid
+classDiagram
+    class Persona {
+        <<abstract>>
+        -int idPersona
+        -String primerNombre
+        -String apellidoPaterno
+        -String apellidoMaterno
+        -String calle
+        -String numero
+        -String colonia
+        -String codigoPostal
+        -Date fechaNacimiento
+        -List~String~ telefonos
+        +calcularEdad() int
+        +getNombreCompleto() String
+    }
+    class Paciente {
+        -String numExpediente
+        -String tipoSangre
+    }
+    class Medico {
+        -String numCedula
+        -Date fechaContratacion
+        -List~String~ especialidades
+    }
+    class Departamento {
+        -int idDepto
+        -String nombreDepto
+        -String ubicacion
+    }
+    class Cita {
+        -int folioCita
+        -Date fecha
+        -Time hora
+        -String estado
+    }
+    class Consulta {
+        -int idConsulta
+        -String diagnostico
+        -Decimal costoBase
+        +emitirReceta() Receta
+    }
+    class Receta {
+        -int folioReceta
+        -Date fechaEmision
+    }
+    class Medicamento {
+        -int codigoMed
+        -String nombreComercial
+        -String formula
+    }
+    class RecetaMedicamento {
+        -String dosis
+        -String frecuencia
+        -int duracionDias
+    }
+    Persona <|-- Paciente : Generalizacion
+    Persona <|-- Medico : Generalizacion
+    Departamento "1" o-- "0..*" Medico : alberga
+    Paciente "1" -- "0..*" Cita : solicita
+    Medico "1" -- "0..*" Cita : atiende
+    Cita "1" -- "0..1" Consulta : origina
+    Consulta "1" *-- "0..*" Receta : prescribe
+    Receta "1" -- "1..*" RecetaMedicamento : incluye
+    Medicamento "1" -- "0..*" RecetaMedicamento : prescribe_en
+
+```
+
+
+[tarea_2_2_transicion_uml-v2.0Revision.md](https://github.com/user-attachments/files/34105725/tarea_2_2_transicion_uml-v2.0Revision.md)
+
